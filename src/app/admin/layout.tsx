@@ -1,36 +1,68 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function AdminLayout({
   children,
 }: {
   children: ReactNode;
 }) {
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const linkStyle = (path: string) =>
+    `p-2 rounded ${
+      pathname === path
+        ? "bg-gray-700 text-green-400"
+        : "hover:bg-gray-700 text-white"
+    }`;
+
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar */}
-      <aside className="w-64 bg-gray-900 text-white p-5">
+      
+     
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="md:hidden fixed top-4 left-4 z-50 bg-gray-900 text-white p-2 rounded"
+      >
+        ☰
+      </button>
+
+      
+      {isOpen && (
+        <div
+          onClick={() => setIsOpen(false)}
+          className="fixed inset-0 bg-black opacity-40 z-40 md:hidden"
+        />
+      )}
+
+      
+      <aside
+        className={`fixed md:static top-0 left-0 h-screen w-64 bg-gray-900 text-white p-5 transform transition-transform duration-300 z-50
+        ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
+      >
         <h2 className="text-2xl font-bold mb-6">Admin Panel</h2>
 
         <nav className="flex flex-col gap-3">
           <Link
             href="/admin/user"
-            className="hover:bg-gray-700 p-2 rounded"
+            className={linkStyle("/admin/user")}
+            onClick={() => setIsOpen(false)}
           >
             Users
           </Link>
 
           <Link
             href="/admin/transactions"
-            className="hover:bg-gray-700 p-2 rounded"
+            className={linkStyle("/admin/transactions")}
+            onClick={() => setIsOpen(false)}
           >
             Transactions
           </Link>
         </nav>
 
-        {/* Logout Button */}
         <button
           onClick={() => {
             localStorage.removeItem("user");
@@ -45,8 +77,8 @@ export default function AdminLayout({
         </button>
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 bg-gray-100 p-6">
+      {/* 📄 Main Content */}
+      <main className="flex-1 bg-gray-100 p-4 md:p-6 w-full">
         {children}
       </main>
     </div>

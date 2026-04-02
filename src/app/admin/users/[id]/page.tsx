@@ -1,15 +1,13 @@
-import { users } from "@/app/lib/data";
+// "use client";
 
-export default function UserDetail({ params }: { params: { id: string } }) {
-  const user = users.find((u) => u.id === params.id);
+// import { useParams } from "next/navigation";
+// import { users } from "@/app/lib/data";
 
-  if (!user) return <div>User not found</div>;
+// export default function UserDashboard() {
+//   const params = useParams();
+//   const user = users.find((u) => u.id === params.id);
 
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">{user.name}</h1>
-      <p>Role: {user.role}</p>
-      <p>Email: {user.email}</p>
-    </div>
-  );
-}
+//   if (!user) return <div>User not found</div>;
+
+//   return <h1>Welcome {user.name}</h1>;
+// }

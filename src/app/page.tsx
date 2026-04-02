@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getUserFromLocalStorage } from "./lib/auth";
+import LoginPage from "./(auth)/login/page";
 
 export default function Page() {
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function Page() {
 
   return (
     <div className="p-6">
-      <h1>Home Page</h1>
+      <LoginPage/>
     </div>
   );
 }
