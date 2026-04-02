@@ -1,8 +1,8 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function AdminLayout({
   children,
@@ -10,7 +10,24 @@ export default function AdminLayout({
   children: ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
+
   const [isOpen, setIsOpen] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+
+    if (!user) {
+      router.push("/login");
+    } else if (user.role !== "admin") {
+      router.push("/login");
+    } else {
+      setIsAuth(true);
+    }
+  }, []);
+
+  if (!isAuth) return <p className="p-5">Loading...</p>;
 
   const linkStyle = (path: string) =>
     `p-2 rounded ${
@@ -22,7 +39,6 @@ export default function AdminLayout({
   return (
     <div className="flex min-h-screen">
       
-     
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="md:hidden fixed top-4 left-4 z-50 bg-gray-900 text-white p-2 rounded"
@@ -30,7 +46,7 @@ export default function AdminLayout({
         ☰
       </button>
 
-      
+      {/* Overlay */}
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
@@ -38,7 +54,6 @@ export default function AdminLayout({
         />
       )}
 
-      
       <aside
         className={`fixed md:static top-0 left-0 h-screen w-64 bg-gray-900 text-white p-5 transform transition-transform duration-300 z-50
         ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
@@ -69,7 +84,7 @@ export default function AdminLayout({
             localStorage.removeItem("token");
             document.cookie = "user=; Max-Age=0";
             document.cookie = "token=; Max-Age=0";
-            window.location.href = "/login";
+            router.push("/login");
           }}
           className="mt-10 bg-red-500 w-full p-2 rounded hover:bg-red-600"
         >
