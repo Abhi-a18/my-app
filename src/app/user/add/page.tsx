@@ -75,7 +75,6 @@ export default function CompletedTodos() {
             key={todo.id}
             className="flex flex-col sm:flex-row sm:justify-between sm:items-center border p-3 rounded-lg shadow-sm"
           >
-            {/* Left Section */}
             <div className="flex items-center gap-3 mb-2 sm:mb-0">
               <button
                 onClick={() => handleToggle(todo.id)}
@@ -89,7 +88,6 @@ export default function CompletedTodos() {
               </span>
             </div>
 
-            {/* Right Section */}
             <button
               onClick={() => handleDelete(todo.id)}
               className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 w-full sm:w-auto"

@@ -78,7 +78,6 @@ export default function TodoPage() {
         Todos
       </h1>
 
-      {/* ➕ Input Section */}
       <div className="flex flex-col sm:flex-row gap-2 mb-4">
         <input
           value={task}
@@ -94,21 +93,18 @@ export default function TodoPage() {
         </button>
       </div>
 
-      {/* ❌ Empty State */}
       {todos.length === 0 && (
         <p className="text-center text-gray-500">
           No todos yet
         </p>
       )}
 
-      {/* 📋 Todo List */}
       <div className="flex flex-col gap-3">
         {todos.map((todo) => (
           <div
             key={todo.id}
             className="flex flex-col sm:flex-row sm:justify-between sm:items-center border p-3 rounded-lg shadow-sm"
           >
-            {/* Left */}
             <div className="flex items-center gap-3 mb-2 sm:mb-0">
               <button
                 onClick={() => handleToggle(todo.id)}
@@ -122,7 +118,6 @@ export default function TodoPage() {
               </span>
             </div>
 
-            {/* Right */}
             <button
               onClick={() => handleDelete(todo.id)}
               className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg w-full sm:w-auto"

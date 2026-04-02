@@ -50,14 +50,12 @@ export default function Dashboard() {
   return (
     <div className="p-4 md:p-6 space-y-6">
       
-      {/* 👋 Welcome Card */}
       <div className="bg-white p-4 md:p-6 rounded-lg shadow">
         <h1 className="text-lg md:text-2xl font-bold">
           👋 Welcome, {user?.name}
         </h1>
       </div>
 
-      {/* 📊 Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         <div className="bg-blue-500 text-white p-4 rounded-lg shadow">
           <p className="text-sm">Total</p>
@@ -75,7 +73,6 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* 🔘 Button */}
       <button
         onClick={() => router.push("/user/todos")}
         className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 shadow w-full sm:w-auto"
@@ -83,7 +80,6 @@ export default function Dashboard() {
         Go to Todos
       </button>
 
-      {/* 📋 Recent Todos */}
       <div className="bg-white p-4 md:p-6 rounded-lg shadow">
         <h2 className="text-md md:text-lg mb-3 font-semibold">
           Recent Todos

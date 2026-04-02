@@ -77,7 +77,6 @@ export default function AdminLayout({
         </button>
       </aside>
 
-      {/* 📄 Main Content */}
       <main className="flex-1 bg-gray-100 p-4 md:p-6 w-full">
         {children}
       </main>
