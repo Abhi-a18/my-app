@@ -10,11 +10,21 @@ export default function Page() {
 
   useEffect(() => {
     const user = getUserFromLocalStorage();
-
-    if (!user) {
-      router.push("/login"); 
+    
+     if (!user ) {
+      router.push("/login");
+    } else if (user.role === "user") {
+      router.push("/user/dashboard");
     }
+     else if (user.role === "admin") {
+       router.push("/admin/user");
+     } 
+    else {
+      router.push("/login");
+    }
+    
   }, []);
+  
 
   return (
     <div className="p-6">

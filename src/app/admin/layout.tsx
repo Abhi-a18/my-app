@@ -46,7 +46,7 @@ export default function AdminLayout({
         ☰
       </button>
 
-      {/* Overlay */}
+      
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}

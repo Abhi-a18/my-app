@@ -8,7 +8,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [selectedRole, setSelectedRole] = useState<"user" | "admin">("user");
+  
 
   const router = useRouter();
 
@@ -18,11 +18,6 @@ export default function LoginPage() {
     );
 
     if (!user) {
-      alert("Invalid credentials");
-      return;
-    }
-
-    if (selectedRole !== user.role) {
       alert("Invalid credentials");
       return;
     }
@@ -41,30 +36,6 @@ export default function LoginPage() {
     <div className="flex h-screen items-center justify-center bg-gray-100 ">
       <div className="bg-white p-6 rounded shadow-lg w-80">
         <h1 className="text-xl font-bold mb-4 text-center">Login</h1>
-
-        <div className="flex gap-4 justify-center mb-3">
-          <button
-            onClick={() => setSelectedRole("user")}
-            className={`px-3 py-1 rounded ${
-              selectedRole === "user"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200"
-            }`}
-          >
-            User
-          </button>
-
-          <button
-            onClick={() => setSelectedRole("admin")}
-            className={`px-3 py-1 rounded ${
-              selectedRole === "admin"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200"
-            }`}
-          >
-            Admin
-          </button>
-        </div>
 
         <hr />
 
