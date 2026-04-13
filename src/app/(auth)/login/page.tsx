@@ -23,7 +23,9 @@ export default function LoginPage() {
     }
 
     localStorage.setItem("user", JSON.stringify(user));
-    document.cookie = `user=${JSON.stringify(user)}`;
+    document.cookie = `user=${encodeURIComponent(
+  JSON.stringify(user)
+)}; path=/`;
 
     if (user.role === "admin") {
       router.push("/admin/user");

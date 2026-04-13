@@ -1,8 +1,18 @@
-import Link from "next/link";
+"use client";
+
 import { users } from "@/app/lib/data";
+import { useRouter } from "next/navigation";
 
 export default function UsersPage() {
+  const router = useRouter();
   const normalUsers = users.filter((u) => u.role === "user");
+
+  const handleViewDashboard = (user: any) => {
+   
+    localStorage.setItem("user", JSON.stringify(user));
+
+    router.push("/user/dashboard");
+  };
 
   return (
     <div className="p-6">
@@ -19,12 +29,12 @@ export default function UsersPage() {
             {user.name} ({user.role})
           </span>
 
-          
-          <Link href={`/user/dashboard`}>
-            <button className="bg-green-500 rounded-lg text-white hover:bg-green-600 px-3 py-1">
-              Go to dashboard
-            </button>
-          </Link>
+          <button
+            onClick={() => handleViewDashboard(user)}
+            className="bg-green-500 rounded-lg text-white hover:bg-green-600 px-3 py-1"
+          >
+            Go to dashboard
+          </button>
         </div>
       ))}
     </div>
