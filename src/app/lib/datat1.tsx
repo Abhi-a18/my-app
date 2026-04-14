@@ -16,5 +16,12 @@ export const transactions = [
     user: "Abhishek",
     amount: 300,
     status: "Failed",
+
+  },
+   {
+    id: "t4",
+    user: "Abhishek Banyal",
+    amount: 30000,
+    status: "Completed",
   },
 ];

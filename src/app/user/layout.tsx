@@ -13,12 +13,17 @@ export default function UserLayout({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user") || "null");
+    const impersonateUser = JSON.parse(
+      localStorage.getItem("impersonateUser") || "null"
+    );
 
     if (!user) {
       router.push("/login");
-    } else if (user.role !== "user") {
-      router.push("/login");
-    } else {
+    } 
+    else if (user.role === "admin" && !impersonateUser) {
+      router.push("/admin/user");
+    } 
+    else {
       setIsAuth(true);
     }
   }, []);
@@ -34,7 +39,6 @@ export default function UserLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex">
-      
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="md:hidden fixed top-4 left-4 z-50 bg-gray-800 text-white p-2 rounded"
@@ -68,15 +72,29 @@ export default function UserLayout({ children }: { children: ReactNode }) {
             Completed Todos
           </Link>
 
+          {JSON.parse(localStorage.getItem("user") || "null")?.role ===
+            "admin" && (
+            <button
+              onClick={() => {
+                localStorage.removeItem("impersonateUser");
+                router.push("/admin/user");
+              }}
+              className="bg-yellow-500 p-2 rounded mt-5 hover:bg-yellow-600"
+            >
+              Back to Admin
+            </button>
+          )}
+
           <button
             onClick={() => {
               localStorage.removeItem("user");
+              localStorage.removeItem("impersonateUser"); 
               localStorage.removeItem("token");
               document.cookie = "user=; Max-Age=0";
               document.cookie = "token=; Max-Age=0";
               router.push("/login");
             }}
-            className="mt-10 bg-red-500 w-full p-2 rounded hover:bg-red-600"
+            className="mt-5 bg-red-500 w-full p-2 rounded hover:bg-red-600"
           >
             Logout
           </button>
@@ -86,4 +104,4 @@ export default function UserLayout({ children }: { children: ReactNode }) {
       <main className="flex-1 p-6 w-full">{children}</main>
     </div>
   );
-}
+} 

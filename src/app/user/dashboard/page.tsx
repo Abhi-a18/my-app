@@ -16,28 +16,38 @@ export default function Dashboard() {
   const [userTodos, setUserTodos] = useState<Todo[]>([]);
   const router = useRouter();
 
-  const loadTodos = () => {
-    const currentUser = getUserFromLocalStorage();
-    setUser(currentUser);
+ const loadTodos = () => {
+  const loggedInUser = getUserFromLocalStorage();
 
-    if (!currentUser) return;
+  let activeUser = loggedInUser;
 
-    const activeTodos = JSON.parse(localStorage.getItem("todos") || "[]");
-    const completedTodos = JSON.parse(
-      localStorage.getItem("completedTodos") || "[]"
-    );
+  if (loggedInUser?.role === "admin") {
+    const selectedUser = localStorage.getItem("selectedUser");
 
-    const userActive = activeTodos.filter(
-      (t: Todo) => t.userId === currentUser.id
-    );
+    if (selectedUser) {
+      activeUser = JSON.parse(selectedUser);
+    }
+  }
 
-    const userCompleted = completedTodos.filter(
-      (t: Todo) => t.userId === currentUser.id
-    );
+  setUser(activeUser);
 
-    setUserTodos([...userActive, ...userCompleted]);
-  };
+  if (!activeUser) return;
 
+  const activeTodos = JSON.parse(localStorage.getItem("todos") || "[]");
+  const completedTodos = JSON.parse(
+    localStorage.getItem("completedTodos") || "[]"
+  );
+
+  const userActive = activeTodos.filter(
+    (t: Todo) => t.userId === activeUser.id
+  );
+
+  const userCompleted = completedTodos.filter(
+    (t: Todo) => t.userId === activeUser.id
+  );
+
+  setUserTodos([...userActive, ...userCompleted]);
+};
   useEffect(() => {
     loadTodos();
     window.addEventListener("focus", loadTodos);

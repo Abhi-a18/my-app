@@ -2,16 +2,36 @@
 
 import { users } from "@/app/lib/data";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { getUserFromLocalStorage } from "@/app/lib/auth";
+
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+};
 
 export default function UsersPage() {
   const router = useRouter();
+
   const normalUsers = users.filter((u) => u.role === "user");
 
-  const handleViewDashboard = (user: any) => {
-   
-    localStorage.setItem("user", JSON.stringify(user));
+  useEffect(() => {
+    const loggedInUser = getUserFromLocalStorage();
 
-    router.push("/user/dashboard");
+    if (!loggedInUser || loggedInUser.role !== "admin") {
+      router.push("/login");
+    }
+  }, []);
+
+  const handleViewDashboard = (user: User) => {
+   
+   localStorage.removeItem("impersonateUser");
+  
+   localStorage.setItem("impersonateUser", JSON.stringify(user));
+  
+   router.push("/user/dashboard");
   };
 
   return (
@@ -19,6 +39,10 @@ export default function UsersPage() {
       <h1 className="text-xl font-bold mb-4 flex justify-center text-orange-500">
         All Users
       </h1>
+
+      {normalUsers.length === 0 && (
+        <p className="text-center text-gray-500">No users found</p>
+      )}
 
       {normalUsers.map((user) => (
         <div
@@ -33,7 +57,7 @@ export default function UsersPage() {
             onClick={() => handleViewDashboard(user)}
             className="bg-green-500 rounded-lg text-white hover:bg-green-600 px-3 py-1"
           >
-            Go to dashboard
+            View Dashboard
           </button>
         </div>
       ))}
