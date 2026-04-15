@@ -13,16 +13,11 @@ export default function UserLayout({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user") || "null");
-    const impersonateUser = JSON.parse(
-      localStorage.getItem("impersonateUser") || "null"
-    );
 
     if (!user) {
       router.push("/login");
     } 
-    else if (user.role === "admin" && !impersonateUser) {
-      router.push("/admin/user");
-    } 
+    
     else {
       setIsAuth(true);
     }
@@ -72,23 +67,9 @@ export default function UserLayout({ children }: { children: ReactNode }) {
             Completed Todos
           </Link>
 
-          {JSON.parse(localStorage.getItem("user") || "null")?.role ===
-            "admin" && (
-            <button
-              onClick={() => {
-                localStorage.removeItem("impersonateUser");
-                router.push("/admin/user");
-              }}
-              className="bg-yellow-500 p-2 rounded mt-5 hover:bg-yellow-600"
-            >
-              Back to Admin
-            </button>
-          )}
-
           <button
             onClick={() => {
               localStorage.removeItem("user");
-              localStorage.removeItem("impersonateUser"); 
               localStorage.removeItem("token");
               document.cookie = "user=; Max-Age=0";
               document.cookie = "token=; Max-Age=0";
@@ -104,4 +85,4 @@ export default function UserLayout({ children }: { children: ReactNode }) {
       <main className="flex-1 p-6 w-full">{children}</main>
     </div>
   );
-} 
+}

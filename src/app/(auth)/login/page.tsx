@@ -12,27 +12,30 @@ export default function LoginPage() {
 
   const router = useRouter();
 
-  const handleLogin = () => {
-    const user = users.find(
-      (u) => u.email === email && u.password === password
-    );
+ const handleLogin = () => {
+  const user = users.find(
+    (u) => u.email === email && u.password === password
+  );
 
-    if (!user) {
-      alert("Invalid credentials");
-      return;
-    }
+  if (!user) {
+    alert("Invalid credentials");
+    return;
+  }
 
-    localStorage.setItem("user", JSON.stringify(user));
-    document.cookie = `user=${encodeURIComponent(
-  JSON.stringify(user)
-)}; path=/`;
+  localStorage.setItem("user", JSON.stringify(user));
 
-    if (user.role === "admin") {
-      router.push("/admin/user");
-    } else {
-      router.push("/user/dashboard");
-    }
-  };
+  localStorage.setItem("users", JSON.stringify(users));
+
+  document.cookie = `user=${encodeURIComponent(
+    JSON.stringify(user)
+  )}; path=/`;
+
+  if (user.role === "admin") {
+    router.push("/admin/user");
+  } else {
+    router.push("/user/dashboard");
+  }
+};
 
   return (
     <div className="flex h-screen items-center justify-center bg-gray-100 ">
