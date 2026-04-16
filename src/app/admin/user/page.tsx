@@ -11,15 +11,13 @@ export default function UsersPage() {
 
   const normalUsers = users.filter((u) => u.role === "user");
 
-  useEffect(() => {
-    const loggedInUser = getUserFromLocalStorage();
+ useEffect(() => {
+  const loggedInUser = getUserFromLocalStorage();
 
-    if (!loggedInUser || loggedInUser.role !== "admin") {
-      router.push("/login");
-    }
-
-    localStorage.setItem("users", JSON.stringify(users));
-  }, []);
+  if (!loggedInUser || loggedInUser.role !== "admin") {
+    router.push("/login");
+  }
+}, [router]);
 
   return (
     <div className="p-6">
@@ -30,13 +28,13 @@ export default function UsersPage() {
       {normalUsers.map((user) => (
         <div
           key={user.id}
-          className="p-3 border mb-2 rounded-lg flex justify-between"
+          className="p-3 border mb-2 rounded-lg flex justify-between items-center"
         >
           <span>{user.name}</span>
 
           <Link
-            href={`/user/dashboard?userId=${user.id}`}
-            className="bg-green-500 text-white px-3 py-1 rounded-lg"
+            href={`/admin/users/${user.id}`}
+            className="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600"
           >
             View Dashboard
           </Link>
