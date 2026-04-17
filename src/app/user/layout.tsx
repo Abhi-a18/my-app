@@ -66,6 +66,9 @@ export default function UserLayout({ children }: { children: ReactNode }) {
           <Link href="/user/add" className={linkClass("/user/add")}>
             Completed Todos
           </Link>
+          <Link href="/user/query" className={linkClass("/user/query")}>
+          Query
+          </Link>
 
           <button
             onClick={() => {
