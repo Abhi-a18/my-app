@@ -7,38 +7,51 @@ import { users } from "@/app/lib/data";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  
+  const [loading, setLoading] = useState(false); 
 
   const router = useRouter();
 
- const handleLogin = () => {
-  const user = users.find(
-    (u) => u.email === email && u.password === password
-  );
+  const handleLogin = () => {
+    setLoading(true); 
 
-  if (!user) {
-    alert("Invalid credentials");
-    return;
+    setTimeout(() => {
+
+
+      const user = users.find(
+        (u) => u.email === email && u.password === password
+      );
+
+      if (!user) {
+        alert("Invalid credentials");
+        setLoading(false);
+        return;
+      }
+
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("users", JSON.stringify(users));
+
+      document.cookie = `user=${encodeURIComponent(
+        JSON.stringify(user)
+      )}; path=/`;
+
+      if (user.role === "admin") {
+        router.push("/admin/user");
+      } else {
+        router.push("/user/dashboard");
+      }
+    }, 1000);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
   }
-
-  localStorage.setItem("user", JSON.stringify(user));
-
-  localStorage.setItem("users", JSON.stringify(users));
-
-  document.cookie = `user=${encodeURIComponent(
-    JSON.stringify(user)
-  )}; path=/`;
-
-  if (user.role === "admin") {
-    router.push("/admin/user");
-  } else {
-    router.push("/user/dashboard");
-  }
-};
 
   return (
-    <div className="flex h-screen items-center justify-center bg-gray-100 ">
+    <div className="flex h-screen items-center justify-center bg-gray-100">
       <div className="bg-white p-6 rounded shadow-lg w-80">
         <h1 className="text-xl font-bold mb-4 text-center">Login</h1>
 
@@ -62,7 +75,7 @@ export default function LoginPage() {
           onClick={handleLogin}
           className="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
       </div>
     </div>

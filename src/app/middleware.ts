@@ -38,7 +38,7 @@ export function middleware(request: NextRequest) {
 
     if (pathname === "/login") {
       url.pathname =
-        user.role === "admin" ? "/admin/user" : "/user/dashboard";
+        user.role === "admin" ? "/admin/user" : "/user/dashboard";  
       return NextResponse.redirect(url);
     }
   }

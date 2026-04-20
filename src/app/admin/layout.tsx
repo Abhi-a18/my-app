@@ -14,6 +14,7 @@ export default function AdminLayout({
 
   const [isOpen, setIsOpen] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user") || "null");
@@ -25,9 +26,19 @@ export default function AdminLayout({
     } else {
       setIsAuth(true);
     }
+
+    setLoading(false); 
   }, []);
 
-  if (!isAuth) return <p className="p-5">Loading...</p>;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (!isAuth) return null;
 
   const linkStyle = (path: string) =>
     `p-2 rounded ${
@@ -37,7 +48,7 @@ export default function AdminLayout({
     }`;
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex  min-h-screen">
       
       <button
         onClick={() => setIsOpen(!isOpen)}
@@ -46,7 +57,6 @@ export default function AdminLayout({
         ☰
       </button>
 
-      
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}

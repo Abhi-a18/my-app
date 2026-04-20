@@ -1,5 +1,12 @@
 "use client";
 import React, { useState } from "react";
+import { z } from "zod";
+
+const formSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email format"),
+  comment: z.string().min(5, "Comment must be at least 5 characters"),
+});
 
 function Page() {
   const [formData, setFormData] = useState({
@@ -10,29 +17,67 @@ function Page() {
 
   const [file, setFile] = useState(null);
 
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    comment: "",
+    file: "",
+  });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormData({ ...formData, [name]: value });
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
   };
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
 
-    if (selectedFile) {
-      
-      if (selectedFile.size > 2 * 1024 * 1024) {
-        alert("File size should be less than 2MB");
-        return;
-      }
-      setFile(selectedFile);
+    if (!selectedFile) return;
+
+    if (selectedFile.size > 2 * 1024 * 1024) {
+      setFile(null); 
+      setErrors((prev) => ({
+        ...prev,
+        file: "File size should be less than 2MB",
+      }));
+      return;
     }
+
+    setFile(selectedFile);
+    setErrors((prev) => ({
+      ...prev,
+      file: "",
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.email || !formData.comment) {
-      alert("All fields are required!");
+    const result = formSchema.safeParse(formData);
+
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors;
+
+      setErrors((prev) => ({
+        ...prev,
+        name: fieldErrors.name?.[0] || "",
+        email: fieldErrors.email?.[0] || "",
+        comment: fieldErrors.comment?.[0] || "",
+      }));
+      return;
+    }
+
+    if (file && file.size > 2 * 1024 * 1024) {
+      setErrors((prev) => ({
+        ...prev,
+        file: "File size should be less than 2MB",
+      }));
       return;
     }
 
@@ -49,19 +94,23 @@ function Page() {
       comment: "",
     });
     setFile(null);
+    setErrors({
+      name: "",
+      email: "",
+      comment: "",
+      file: "",
+    });
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-
-      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
-
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="bg-gray-200 shadow-lg rounded-2xl p-8 w-full max-w-md">
         <h2 className="text-2xl font-bold text-center text-orange-600 mb-6">
           Query Form
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-
+          
           <div>
             <label className="block mb-1 font-medium">Name</label>
             <input
@@ -70,22 +119,26 @@ function Page() {
               placeholder="Enter your name"
               value={formData.name}
               onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-1 focus:ring-black"
+              className="w-full border rounded-lg p-2"
             />
+            {errors.name && (
+              <p className="text-red-500 text-sm">{errors.name}</p>
+            )}
           </div>
 
           <div>
             <label className="block mb-1 font-medium">Email</label>
             <input
-              type="email"
+              type="text"
               name="email"
               placeholder="Enter your email"
               value={formData.email}
               onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-1 focus:ring-black"
+              className="w-full border rounded-lg p-2"
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email}</p>
+            )}
           </div>
 
           <div>
@@ -95,22 +148,27 @@ function Page() {
               placeholder="Write your message..."
               value={formData.comment}
               onChange={handleChange}
-              required
               rows="4"
-              className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-1 focus:ring-black"
+              className="w-full border rounded-lg p-2"
             />
+            {errors.comment && (
+              <p className="text-red-500 text-sm">{errors.comment}</p>
+            )}
           </div>
 
-          {/* File Upload */}
           <div>
             <label className="block mb-1 font-medium">Upload File</label>
             <input
               type="file"
               onChange={handleFileChange}
-              className="w-full border border-gray-300 rounded-lg p-2 file:bg-amber-500 file:text-white file:border-0 file:rounded file:px-3 file:py-1 file:cursor-pointer"
+              className="w-full border rounded-lg p-2"
             />
 
-            {file && (
+            {errors.file && (
+              <p className="text-red-500 text-sm">{errors.file}</p>
+            )}
+
+            {file && !errors.file && (
               <p className="text-sm text-gray-600 mt-2">
                 Selected: {file.name}
               </p>
@@ -119,11 +177,10 @@ function Page() {
 
           <button
             type="submit"
-            className="w-full bg-orange-500 text-white py-2 rounded-lg font-semibold hover:bg-orange-600 transition"
+            className="w-full bg-orange-500 text-white py-2 rounded-lg"
           >
             Submit
           </button>
-
         </form>
       </div>
     </div>
